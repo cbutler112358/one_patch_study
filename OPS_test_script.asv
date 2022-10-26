@@ -68,9 +68,9 @@ ylim([0,1])
 % study the potential of the drive spreading from one patch to another.
 % That being the case, the new "homoInd" variable initializes patches 1 and
 % 2 with a pop fixed for that index. Plots are an added bonus...
-NUM_GENS = 565;
-NUM_GENS_RELEASE = 200;
-driveParams = [0.8, 0.7, 1.0, 0, 16, 0];
+NUM_GENS = 750;
+NUM_GENS_RELEASE = 150;
+driveParams = [0.8, 0.65, 1.0, 0, 16, 0];
 orgParams = [0.9351, 0.001, 2, 86, 0.6930, 0.8249, 0.2857];
 dispParams = [0.1305, 0.005];
 fitnessType = 'LA';

@@ -4,8 +4,8 @@
 % two patches have been invaded.
 
 
-hVec = 0.5:0.02:1;
-sVec = 0.5:0.02:1;
+hVec = 0.5:0.1:0.6; % 0.5:0.02:1;
+sVec = 0.5:0.1:0.6; % 0.5:0.02:1;
 
 % Matrices to store everything in!
 alleleFreqMat_p1 = zeros(length(hVec), length(sVec));
@@ -59,8 +59,8 @@ for i = 1:length(hVec)
         alleleFreqMat_p1(i,j) = alleleFreq_p1;
         alleleFreqMat_p2(i,j) = alleleFreq_p2;
         alleleFreqMat_p3(i,j) = alleleFreq_p3;
-        meanPopMat_p1(i,j) = meanPop_p1/avgEquilWT_pop;
-        meanPopMat_p2(i,j) = meanPop_p2/avgEquilWT_pop;
-        meanPopMat_p3(i,j) = meanPop_p3/avgEquilWT_pop;
+        meanPopMat_p1( = meanPop_p1/avgEquilWT_pop;
+        meanPopMat_p2 = meanPop_p2/avgEquilWT_pop;
+        meanPopMat_p3 = meanPop_p3/avgEquilWT_pop;
     end
 end
