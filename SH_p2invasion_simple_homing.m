@@ -62,4 +62,5 @@ for i = 1:length(hVec)
         meanPopMat_p2(i,j) = meanPop_p2/avgEquilWT_pop;
         meanPopMat_p3(i,j) = meanPop_p3/avgEquilWT_pop;
     end
+    save('state_save.mat');
 end
