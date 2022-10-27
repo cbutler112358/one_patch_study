@@ -111,6 +111,51 @@ plot(sum(tmp.maleMat(:,:,3),2),'-b','linewidth',2);
 hold on
 plot(sum(tmp.femaleMat(:,:,3),2),'-m','linewidth',2);
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Testing the invasion test established in the previous block but now 
+% including the possibility that Patch 2 and 3 can be left fixed for WT.
+NUM_GENS = 565;
+NUM_GENS_RELEASE = 200;
+driveParams = [0.8, 0.7, 1.0, 0, 16, 0];
+orgParams = [0.9351, 0.001, 2, 86, 0.6930, 0.8249, 0.2857];
+dispParams = [0.1305, 0.005];
+fitnessType = 'LA';
+releaseInd = 2;
+homoInd = [1, 1];
+
+tmp = PADS_OPS(NUM_GENS,NUM_GENS_RELEASE,driveParams,orgParams,dispParams,...
+    fitnessType, releaseInd, homoInd);
+
+% allele frequency vectors
+totalMat = tmp.maleMat + tmp.femaleMat;
+% cFreqVec = (2*sum(totalMat(:,1:3,1),2) + sum(totalMat(:,4:6,1),2))./(2*sum(totalMat(:,:,1),2));
+alleleFreqVec = (2*sum(totalMat(:,1,1),2) + sum(totalMat(:,2,1),2))./(2*sum(totalMat(:,:,1),2));
+subplot(1,3,1)
+plot(alleleFreqVec,'-r');
+ylim([0,1]);
+alleleFreqVec = (2*sum(totalMat(:,1,2),2) + sum(totalMat(:,2,2),2))./(2*sum(totalMat(:,:,2),2));
+subplot(1,3,2)
+plot(alleleFreqVec,'-r');
+ylim([0,1]);
+alleleFreqVec = (2*sum(totalMat(:,1,3),2) + sum(totalMat(:,2,3),2))./(2*sum(totalMat(:,:,3),2));
+subplot(1,3,3)
+plot(alleleFreqVec,'-r');
+ylim([0,1]);
+
+figure 
+% plot populations
+subplot(1,3,1)
+plot(sum(tmp.maleMat(:,:,1),2),'-b','linewidth',2);
+hold on
+plot(sum(tmp.femaleMat(:,:,1),2),'-m','linewidth',2);
+subplot(1,3,2)
+plot(sum(tmp.maleMat(:,:,2),2),'-b','linewidth',2);
+hold on
+plot(sum(tmp.femaleMat(:,:,2),2),'-m','linewidth',2);
+subplot(1,3,3)
+plot(sum(tmp.maleMat(:,:,3),2),'-b','linewidth',2);
+hold on
+plot(sum(tmp.femaleMat(:,:,3),2),'-m','linewidth',2);
 
 
 

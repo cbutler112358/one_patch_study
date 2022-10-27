@@ -151,8 +151,8 @@ function [popStruct] = PADS_OPS(NUM_GENS,NUM_GENS_RELEASE,...
     % geno by row)
     femaleOvipositAllowed = zeros(NUM_GENOTYPES,NUM_GENOTYPES,3);
     
-    if (homoInd <= 0)
-    
+    if (homoInd(1) <= 0)
+        % regular run
         RELEASE_COUNT = 0;
         %% run the sim
         % main for loop
@@ -410,24 +410,33 @@ function [popStruct] = PADS_OPS(NUM_GENS,NUM_GENS_RELEASE,...
         end
         
     else
-        % test invasion potential of Patches 1 and 2
-        RELEASE_COUNT = 0;
         %% run the invasion test
+        
+        % Is the invasion test for Patches 1 and 2 or just Patch 1?
+        patch1Bool = (homoInd(2) == 1);
+        if (homoInd(2) == 2)
+            % both Patches 1 and 2
+            maleMat(1,homoInd(1),1:2) = INIT_POP;            
+            femaleMat(1,homoInd(1),1:2) = INIT_POP;
+            maleMat(1,end,1:2) = 0;
+            femaleMat(1,end,1:2) = 0;
+        else
+            % just Patch 1
+            maleMat(1,homoInd(1),1) = INIT_POP;            
+            femaleMat(1,homoInd(1),1) = INIT_POP;
+            maleMat(1,end,1) = 0;
+            femaleMat(1,end,1) = 0;            
+        end
+
         % main for loop
         IMMIG_PROB = 0;         % movement between global patches
+        MIG_PROB = (homoInd(2) == 2)*dispParams(1);
         for i = 2:(NUM_GENS+1)
             % disp(i); 
             % do we release transgenics?
             if (i-1 == NUM_GENS_RELEASE)
                 IMMIG_PROB = dispParams(2);         % movement between global patches
-            end
-            
-            % are we performing multiple releases?
-            if (MULTI_RELEASE)
-                if (RELEASE_COUNT < 3) && (i-1 == NUM_GENS_RELEASE + RELEASE_COUNT*RELEASE_WINDOW)  
-                    % release males
-                    maleMat(i-1,releaseInd,1) = maleMat(i-1,releaseInd,1) + ceil(numRelease);                
-                    RELEASE_COUNT = RELEASE_COUNT + 1;
+                    MIG_PROB = dispParams(1); 
                 end
             end
 
@@ -659,7 +668,7 @@ function [popStruct] = PADS_OPS(NUM_GENS,NUM_GENS_RELEASE,...
     %         disp(maleMat(i,:,1)); 
     %         disp(i);
         end          
-    end
+    end % end of if homoInd > 0
     
     popStruct = struct();
     popStruct.femaleMat = femaleMat;

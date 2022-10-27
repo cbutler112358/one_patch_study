@@ -29,7 +29,8 @@
 % -- dispParams:
 % -- fitnessType: 
 % -- releaseInd: index of released organism
-% -- homoInd: index of homozygote
+% -- homoInd: (1) Index of homozygote, (2) no. of patches fixed with
+%    transgene for invasion test.
 %
 % OUTPUTS:
 % -- popStruct: 
@@ -151,8 +152,8 @@ function [popStruct] = PADS_OPS(NUM_GENS,NUM_GENS_RELEASE,...
     % geno by row)
     femaleOvipositAllowed = zeros(NUM_GENOTYPES,NUM_GENOTYPES,3);
     
-    if (homoInd <= 0)
-    
+    if (homoInd(1) <= 0)
+        % regular run
         RELEASE_COUNT = 0;
         %% run the sim
         % main for loop
@@ -411,17 +412,31 @@ function [popStruct] = PADS_OPS(NUM_GENS,NUM_GENS_RELEASE,...
         
     else
         %% run the invasion test
-        maleMat(1,homoInd,1:2) = INIT_POP;
-        femaleMat(1,homoInd,1:2) = INIT_POP;
-        maleMat(1,end,1:2) = 0;
-        femaleMat(1,end,1:2) = 0;
+        
+        % Is the invasion test for Patches 1 and 2 or just Patch 1?
+        if (homoInd(2) == 2)
+            % both Patches 1 and 2
+            maleMat(1,homoInd(1),1:2) = INIT_POP;            
+            femaleMat(1,homoInd(1),1:2) = INIT_POP;
+            maleMat(1,end,1:2) = 0;
+            femaleMat(1,end,1:2) = 0;
+        else
+            % just Patch 1
+            maleMat(1,homoInd(1),1) = INIT_POP;            
+            femaleMat(1,homoInd(1),1) = INIT_POP;
+            maleMat(1,end,1) = 0;
+            femaleMat(1,end,1) = 0;            
+        end
+
         % main for loop
-        IMMIG_PROB = 0;         % movement between global patches
+        IMMIG_PROB = (homoInd(2) == 1)*dispParams(2);         % movement between global patches
+        MIG_PROB = (homoInd(2) == 2)*dispParams(1);
         for i = 2:(NUM_GENS+1)
             % disp(i); 
             % do we release transgenics?
             if (i-1 == NUM_GENS_RELEASE)
                 IMMIG_PROB = dispParams(2);         % movement between global patches
+                MIG_PROB = dispParams(1); 
             end
 
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
