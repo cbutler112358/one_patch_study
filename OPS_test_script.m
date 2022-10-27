@@ -35,7 +35,7 @@ test = genBT_simple_homing(CONV_EFFICIENCY,CONV_EFFICIENCY);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Seeing how the frequency of a transgene and it's "anchor" evolve with 
-% time in the one putch study for a tethered homing drive.
+% time in the one patch study for a tethered homing drive.
 NUM_GENS = 1250;
 NUM_GENS_RELEASE = 100;
 driveParams = [0.6, 0.75, 1.0, 0, 8, 14];
@@ -114,14 +114,14 @@ plot(sum(tmp.femaleMat(:,:,3),2),'-m','linewidth',2);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Testing the invasion test established in the previous block but now 
 % including the possibility that Patch 2 and 3 can be left fixed for WT.
-NUM_GENS = 565;
+NUM_GENS = 565+365;
 NUM_GENS_RELEASE = 200;
-driveParams = [0.8, 0.7, 1.0, 0, 16, 0];
+driveParams = [0.74, 0.68, 0.95, 0, 8, 0];
 orgParams = [0.9351, 0.001, 2, 86, 0.6930, 0.8249, 0.2857];
 dispParams = [0.1305, 0.005];
 fitnessType = 'LA';
 releaseInd = 2;
-homoInd = [1, 1];
+homoInd = [1,1];
 
 tmp = PADS_OPS(NUM_GENS,NUM_GENS_RELEASE,driveParams,orgParams,dispParams,...
     fitnessType, releaseInd, homoInd);
@@ -157,7 +157,82 @@ plot(sum(tmp.maleMat(:,:,3),2),'-b','linewidth',2);
 hold on
 plot(sum(tmp.femaleMat(:,:,3),2),'-m','linewidth',2);
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Preparing and plotting the data contained in SH_p3_invasion_vars.mat.
 
+% Scenario 1: Drive goes extinct.
+% Scenario 2: Drive infects Patch 1 and no further.
+% Scenario 3: Drive infects Patch 1 and 2 and no further.
+% Scenario 4: Drive spreads to all patches
+
+scenarioMat_p3 = zeros(length(hVec),length(sVec));
+for i = 1:length(hVec)
+    for j = 1:length(sVec)
+        patch1Infect = (alleleFreqMat_p1(i,j) >= 0.05);
+        patch2Infect = (alleleFreqMat_p2(i,j) >= 0.05);
+        patch3Infect = (alleleFreqMat_p3(i,j) >= 0.05);
+        if patch1Infect
+            if patch2Infect 
+                if patch3Infect
+                    % Scenario 4
+                    scenarioMat_p3(i,j) = 4;
+                else
+                    % Scenario 3
+                    scenarioMat_p3(i,j) = 3;
+                end
+            else
+                % Scenario 2
+                scenarioMat_p3(i,j) = 2;
+            end
+        else
+            % Scenario 1
+            scenarioMat_p3(i,j) = 1;
+        end
+    end 
+end
+
+pcolor(sVec, hVec,scenarioMat_p3)
+ylabel("dominance, $h$",'interpreter','latex')
+xlabel("fitness cost, $s$",'interpreter','latex')
+set(gca, 'fontsize',18);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Preparing and plotting the data contained in SH_p2_invasion_vars.mat.
+
+% Scenario 1: Drive goes extinct.
+% Scenario 2: Drive infects Patch 1 and no further.
+% Scenario 3: Drive infects Patch 1 and 2 and no further.
+% Scenario 4: Drive spreads to all patches
+
+scenarioMat_p2 = zeros(length(hVec),length(sVec));
+for i = 1:length(hVec)
+    for j = 1:length(sVec)
+        patch1Infect = (alleleFreqMat_p1(i,j) >= 0.05);
+        patch2Infect = (alleleFreqMat_p2(i,j) >= 0.05);
+        patch3Infect = (alleleFreqMat_p3(i,j) >= 0.05);
+        if patch1Infect
+            if patch2Infect 
+                if patch3Infect
+                    % Scenario 4
+                    scenarioMat_p2(i,j) = 4;
+                else
+                    % Scenario 3
+                    scenarioMat_p2(i,j) = 3;
+                end
+            else
+                % Scenario 2
+                scenarioMat_p2(i,j) = 2;
+            end
+        else
+            % Scenario 1
+            scenarioMat_p2(i,j) = 1;
+        end
+    end 
+end
+
+pcolor(sVec, hVec,scenarioMat_p2)
+ylabel("dominance, $h$",'interpreter','latex')
+xlabel("fitness cost, $s$",'interpreter','latex')
+set(gca, 'fontsize',18);
 
 
 
